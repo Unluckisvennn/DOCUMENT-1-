@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mon Album</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #1a1a1a, #000);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      animation: fadeIn 1.5s ease;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    h2 {
+      margin-top: 30px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      opacity: 0.7;
+    }
+
+    .feat {
+      color: #b00000;
+      font-size: 0.85em;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(255,255,255,0.15);
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+    }
+
+    img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 60px rgba(255,255,255,0.3);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+    }
+
+    li {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: background 0.3s ease, padding-left 0.3s ease;
+    }
+
+    li:hover {
+      background: rgba(255,255,255,0.05);
+      padding-left: 20px;
+    }
+
+    audio, video {
+      width: 100%;
+      margin-top: 25px;
+      animation: fadeIn 1s ease;
+    }
+
+    video {
+      border-radius: 12px;
+      box-shadow: 0 0 50px rgba(255,255,255,0.25);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hint {
+      font-size: 13px;
+      opacity: 0.6;
+      margin-top: 12px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DOCUMENT 1</h1>
+
+    <!-- Cover -->
+    <img id="cover" src="cover.jpg" alt="Cover Album" />
+    <div id="hintCover" class="hint">clique sur la cover</div>
+
+    <!-- Tracklist -->
+    <ul id="tracklist" class="hidden">
+      <li onclick="playTrack(0)">01 — DOCUMENT 1</li>
+      <li onclick="playTrack(1)">02 — DOCUMENT 2 <span class="feat">Feat O'G</span></li>
+      <li onclick="playTrack(2)">03 — PREPA <span class="feat">Feat LUSHOW</span></li>
+      <li onclick="playTrack(3)">04 — ANNEXE</li>
+    </ul>
+
+    <!-- Audio player -->
+    <audio id="audioPlayer" controls class="hidden"></audio>
+
+    <!-- Video finale -->
+    <h2 id="videoTitle" class="hidden">EXAM NOIR</h2>
+    <h2 id="videoTitle" class="hidden">EXAM NOIR</h2>
+    <video id="finalVideo" class="hidden" controls playsinline>
+      <source src="final-video.mp4" type="video/mp4" />
+    </video>
+
+    <div id="endPage" class="hidden">
+      <h2>ON SE RETROUVE DANS DOCUMENT 2</h2>
+    </div>
+  </div>
+
+  <script>
+    const cover = document.getElementById('cover');
+    const tracklist = document.getElementById('tracklist');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const finalVideo = document.getElementById('finalVideo');
+    const hintCover = document.getElementById('hintCover');
+    const videoTitle = document.getElementById('videoTitle');
+    const endPage = document.getElementById('endPage');
+
+    const tracks = [
+      'track1.mp3',
+      'track2.mp3',
+      'track3.mp3',
+      'track4.mp3'
+    ];
+
+    let listenedTracks = new Set();
+
+    cover.addEventListener('click', () => {
+      cover.style.display = 'none';
+      hintCover.style.display = 'none';
+      tracklist.classList.remove('hidden');
+    });
+
+    function playTrack(index) {
+      audioPlayer.src = tracks[index];
+      audioPlayer.classList.remove('hidden');
+      audioPlayer.play();
+
+      audioPlayer.onended = () => {
+        listenedTracks.add(index);
+        if (listenedTracks.size === tracks.length) {
+          tracklist.classList.add('hidden');
+          audioPlayer.classList.add('hidden');
+          videoTitle.classList.remove('hidden');
+          finalVideo.classList.remove('hidden');
+
+          finalVideo.onended = () => {
+            finalVideo.classList.add('hidden');
+            videoTitle.classList.add('hidden');
+            endPage.classList.remove('hidden');
+          };
+        }
+      };
+    }
+  </script>
+</body>
+</html>
